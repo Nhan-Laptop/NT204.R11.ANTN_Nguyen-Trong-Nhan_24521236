@@ -135,7 +135,7 @@ class FlowTests(unittest.TestCase):
 
     def test_T10_udp_dns_query_response(self):
         from scapy.all import DNS, DNSQR, DNSRR, IP, UDP
-        from pipeline import packet_to_event
+        from main import packet_to_event
         query = IP(src="10.0.0.1", dst="10.0.0.2") / UDP(sport=40000, dport=53) / DNS(
             id=123, qd=DNSQR(qname="EXAMPLE.COM."))
         response = IP(src="10.0.0.2", dst="10.0.0.1") / UDP(sport=53, dport=40000) / DNS(

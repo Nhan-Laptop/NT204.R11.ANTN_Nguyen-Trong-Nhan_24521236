@@ -1,69 +1,50 @@
 # Bài tập 1 — Packet Capture & Parser
 
-## Mục tiêu
+## Vị trí trong app chung
 
-Bài 1 đọc packet từ interface hoặc PCAP, phân tích các giao thức cơ bản và
-xuất event theo JSON Lines. Entry point chung nằm ở root repository:
+Bài 1 là **bước Parser đầu tiên** của pipeline root:
 
 ```text
-repo/main.py → BaiTap1:Packet_CAPTURER_AND_PARSER/capture.py
-                         └→ parsers/
+main.py → capture.py → parsers.parse_packet()
+       → Decoder → Preprocessor → Flow Tracker → output
 ```
 
-Bài 1 không có `main.py` riêng và không có thư mục test riêng. Tất cả test
-nằm tại `TEST/baitap1/parser/`, ngang hàng với entry point chung.
+Bài 1 không có entry point riêng. Module `capture.py` và thư mục `parsers/`
+chỉ cung cấp chức năng cho app chung và cho unit test.
 
-## Chức năng
+## Chức năng đã kiểm tra
 
-- Capture live packet qua interface hoặc đọc PCAP.
+- Đọc PCAP hoặc capture live qua interface.
 - Parse Ethernet/IPv4, TCP, UDP.
 - Nhận diện HTTP, DNS, SMTP và payload unknown.
-- Nhận diện HTTP/DNS/SMTP trên một số port không chuẩn khi nội dung đủ rõ.
-- Chuẩn hóa event và kiểm tra schema.
-- Ghi một JSON object trên mỗi dòng.
-- Xử lý packet malformed, packet bị cắt, capture lỗi và byte không đọc được mà
-  không làm dừng toàn bộ pipeline.
+- Nhận diện protocol trên một số port không chuẩn.
+- Chuẩn hóa event, ghi JSON Lines và xử lý packet malformed/truncated.
 
-TCP stream reassembly, IP fragmentation reassembly và IDS rule engine chưa nằm
-trong phạm vi của Bài 1.
+## Chạy app hoàn chỉnh
 
-## Cách chạy
-
-Chạy từ thư mục root:
+Chạy từ root repository:
 
 ```bash
-python main.py capture --pcap TEST/baitap1/parser/input/pcap/http_get.pcap \
-  --output events.jsonl
+python main.py --pcap TEST/baitap1/parser/input/pcap/http_get.pcap \
+  --output events.jsonl --flows-output flows.jsonl
 ```
 
-Capture live (cần quyền phù hợp):
-
-```bash
-python main.py capture --interface eth0 --count 20 --output events.jsonl
-```
-
-Các option chính: `--pcap` hoặc `--interface`, `--count`, `--timeout`,
-`--filter`, `--output`, `--unknown-policy mark|skip`.
+Kết quả event sẽ đi tiếp qua Decoder, Preprocessor và Flow Tracker; vì vậy đây
+không phải parser độc lập.
 
 ## Test và evidence
 
 Test nằm ngoài module tại `TEST/baitap1/parser/`:
 
-- `test_mandatory_cases.py`: 12 use case chính của đề.
-- `test_pipeline.py`: parser HTTP, DNS, SMTP, TCP, UDP và unknown.
-- `test_capture_cli.py`: interface/PCAP, callback, count và argument.
-- `test_jsonl_log.py`: JSONL, thứ tự packet, skip policy.
-- `test_error_handling.py`: malformed, truncated, unsupported và capture error.
+- `test_mandatory_cases.py`: 12 use case chính.
+- `test_pipeline.py`: TCP, UDP, HTTP, DNS, SMTP và unknown.
+- `test_capture_cli.py`: capture, callback, count và option.
+- `test_jsonl_log.py`: JSONL, thứ tự packet, mark/skip.
+- `test_error_handling.py`: malformed, truncated và capture error.
 - `test_event_schema.py`: schema và JSON compatibility.
 - `test_nonstandard_ports.py`: protocol trên port không chuẩn.
 - `test_unknown_policy.py`: mark/skip unknown.
 
-Input PCAP nằm trong `TEST/baitap1/parser/input/pcap/`; output thật và kết quả
-chạy nằm trong `TEST/baitap1/parser/output/`. Bảng use case, expected output và
-kết luận module nằm trong `TEST/README.md`.
-
-Chạy nhóm test:
-
-```bash
-python -m unittest discover -s TEST/baitap1/parser -v
-```
+Kết quả thực tế: **79/79 test PASS**. Input nằm ở
+`TEST/baitap1/parser/input/pcap/`; JSONL evidence và log nằm ở
+`TEST/baitap1/parser/output/`. Báo cáo chi tiết ở `TEST/README.md`.

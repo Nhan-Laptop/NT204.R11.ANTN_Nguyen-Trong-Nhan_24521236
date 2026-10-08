@@ -21,9 +21,11 @@ from scapy.all import wrpcap
 
 TEST_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TEST_DIR.parents[2]
+IMPLEMENTATION = REPO_ROOT / "BaiTap1:Packet_CAPTURER_AND_PARSER"
 sys.path.insert(0, str(REPO_ROOT))
+sys.path.insert(0, str(IMPLEMENTATION))
 
-import main  # noqa: E402  (the repository root is added above)
+import capture as main  # noqa: E402  (the parser module is added above)
 
 
 def load_cases():

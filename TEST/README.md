@@ -52,17 +52,21 @@ python TEST/baitap1/parser/make_test_pcaps.py
 python TEST/baitap2/integration/make_evidence.py
 ```
 
-## 3. Entry point chung
+## 3. Entry point chung — một pipeline hoàn chỉnh
 
 ```bash
-# Bài 1
-python main.py capture --pcap TEST/baitap1/parser/input/pcap/http_get.pcap \
-  --output events.jsonl
-
-# Bài 2 đầy đủ
-python main.py process --pcap TEST/baitap2/integration/input/pcap/http_request.pcap \
+python main.py --pcap TEST/baitap2/integration/input/pcap/http_request.pcap \
   --output events.jsonl --flows-output flows.jsonl
 ```
+
+Input đi qua toàn bộ các bước trong cùng một app:
+
+```text
+PCAP/interface → Parser → Decoder → Preprocessor → Flow Tracker → output
+```
+
+Root `main.py` không chia lệnh theo Bài 1/Bài 2. Các module trong hai thư mục
+bài tập chỉ là các bước được gọi bên trong pipeline.
 
 ## 4. Báo cáo Bài 1 — Packet Capture & Parser
 

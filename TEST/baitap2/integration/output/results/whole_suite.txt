@@ -103,6 +103,6 @@ test_T06_missing_optional_fields (baitap2.preprocessor.test_preprocessor.Preproc
 test_T14_malformed_and_unsupported (baitap2.preprocessor.test_preprocessor.PreprocessorTests.test_T14_malformed_and_unsupported) ... ok
 
 ----------------------------------------------------------------------
-Ran 97 tests in 10.665s
+Ran 97 tests in 7.714s
 
 OK

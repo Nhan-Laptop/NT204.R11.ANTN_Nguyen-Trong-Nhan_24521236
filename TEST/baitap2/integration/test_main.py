@@ -10,7 +10,6 @@ import unittest
 from scapy.all import Ether, IP, Raw, TCP, wrpcap
 
 import main
-import pipeline
 
 
 def tcp_packet(flags, timestamp, reverse=False, payload=b"", seq=100, ack=0):
@@ -155,7 +154,7 @@ class RunnerTests(unittest.TestCase):
         packet = Ether(src="02:00:00:00:00:01", dst="02:00:00:00:00:02") / IP(src="10.0.0.1", dst="10.0.0.2") / TCP(sport=40000, dport=80) / Raw(
             b"GET /hello HTTP/1.1\r\nHost: example.test\r\n\r\n")
         packet.time = 1700000000
-        event, payload = pipeline.packet_to_event(packet, 1)
+        event, payload = main.packet_to_event(packet, 1)
         self.assertEqual(event["http_target"], "/hello")
         self.assertEqual(event["packet_length"], len(bytes(packet)))
         self.assertEqual(payload, bytes(packet[TCP].payload))
