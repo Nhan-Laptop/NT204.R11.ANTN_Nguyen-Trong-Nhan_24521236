@@ -1,54 +1,35 @@
-# TEST — Bài kiểm tra chung cho toàn bộ bài tập
+# TEST — Báo cáo kiểm thử chung
 
-`TEST/` nằm **ngang hàng với `main.py` ở thư mục gốc**, không nằm trong
-`BaiTap1:...` hoặc `BaiTap2:...`. Các test được chia theo đúng module cần kiểm
-tra. README này trả lời bốn câu hỏi: test use case nào, input là gì, output ra
-sao, và module đã đạt yêu cầu chưa.
+`TEST/` nằm ngang hàng với `main.py` ở thư mục gốc, bên ngoài cả hai thư mục
+bài tập. README này ghi **những gì đã chạy và kết quả thực tế**, không chỉ ghi
+mục tiêu cần đạt.
 
 ## 1. Cấu trúc
 
 ```text
-repo/
-  main.py                         Entry point chung
-  BaiTap1:Packet_CAPTURER_AND_PARSER/
-    capture.py                    Code capture/parser của Bài 1
-    parsers/                      Parser dùng lại
-  BaiTap2:DECODER_PREPROCESSOR_FLOW_CONNECTION_TRACKER/
-    decoder.py                    Code Decoder
-    preprocessor.py               Code Preprocessor
-    flow_tracker.py               Code Flow Tracker
-    pipeline.py                   Pipeline Bài 2
-  TEST/
-    README.md                     README chung này
-    baitap1/parser/
-      input/                      PCAP input của Bài 1
-      output/                     Evidence JSONL và kết quả test
-      test_*.py                   Test parser/capture
-    baitap2/decoder/
-      input/                      Input use case Decoder
-      output/                     Kết quả T01–T04
-      test_decoder.py
-    baitap2/preprocessor/
-      input/                      Input use case Preprocessor
-      output/                     Kết quả T05, T06, T14
-      test_preprocessor.py
-    baitap2/flow_tracker/
-      input/                      Input event TCP/UDP
-      output/                     Kết quả T07–T13
-      test_flow_tracker.py
-    baitap2/integration/
-      input/                      PCAP integration
-      output/                     Events, flows và kết quả chạy thật
-      test_main.py
+main.py
+TEST/
+  README.md
+  baitap1/parser/
+    input/                    PCAP input
+    output/evidence/           JSONL evidence
+    output/results/            Kết quả chạy test
+    test_*.py
+  baitap2/decoder/
+    input/                    cases.json
+    output/                   T01–T04 và tổng hợp
+    test_decoder.py
+  baitap2/preprocessor/       input/, output/, test_preprocessor.py
+  baitap2/flow_tracker/       input/, output/, test_flow_tracker.py
+  baitap2/integration/        input/PCAP, output/, test_main.py
 ```
 
-Mỗi module có đủ ba phần: `input/` (dữ liệu đưa vào), `test_*.py` (cách kiểm
-tra), và `output/` (kết quả/evidence). Với test unit, một số input nhỏ được tạo
-trực tiếp trong file test để dễ đọc; PCAP lớn được lưu trong `input/`.
+Mỗi nhóm module có `input/`, file test và `output/`. Các file JSONL/PCAP trong
+`output/` là dữ liệu đã sinh từ lần chạy thật; các file `.txt` là log kết quả.
 
-## 2. Cách chạy
+## 2. Cách chạy lại
 
-Chạy từ thư mục gốc repository:
+Chạy toàn bộ:
 
 ```bash
 python -m unittest discover -s TEST -v
@@ -71,98 +52,91 @@ python TEST/baitap1/parser/make_test_pcaps.py
 python TEST/baitap2/integration/make_evidence.py
 ```
 
-## 3. Entry point chung `main.py`
+## 3. Entry point chung
 
 ```bash
-# Bài 1: capture/parse và ghi event JSONL
+# Bài 1
 python main.py capture --pcap TEST/baitap1/parser/input/pcap/http_get.pcap \
   --output events.jsonl
 
-# Bài 2: chạy đầy đủ parser → decoder → preprocessor → flow tracker
+# Bài 2 đầy đủ
 python main.py process --pcap TEST/baitap2/integration/input/pcap/http_request.pcap \
   --output events.jsonl --flows-output flows.jsonl
 ```
 
-Có thể bỏ từ `capture`/`process` khi dùng option đặc trưng của Bài 2 như
-`--flows-output`. Hai implementation bên trong vẫn là các module riêng; root
-`main.py` chỉ chọn pipeline chung.
+## 4. Báo cáo Bài 1 — Packet Capture & Parser
 
-## 4. Bài 1 — Packet Capture & Parser
+### Kết quả theo file test
 
-### Input/output và use case
-
-| Test file | Input | Output kiểm tra | Module đạt khi |
+| Test file | Input/use case đã chạy | Output thực tế quan sát được | Kết quả |
 |---|---|---|---|
-| `test_mandatory_cases.py` | 12 PCAP/use case: TCP handshake, TCP data, UDP, HTTP GET/POST/response, DNS query/response, SMTP command/response, unknown, malformed | Event JSON có protocol, port, payload, HTTP/DNS/SMTP fields, lỗi rõ ràng | `parsers.parse_packet()` nhận diện đúng và không crash |
-| `test_pipeline.py` | Packet TCP/UDP/HTTP/DNS/SMTP và protocol lạ | Event chuẩn hóa theo schema | Parser trả event đủ field và đúng `parse_status` |
-| `test_capture_cli.py` | Fake live capture, PCAP, option sai, capture lỗi | Exit code, callback, count/filter, thông báo lỗi | `capture.py` dùng chung một callback và xử lý lỗi |
-| `test_jsonl_log.py` | Nhiều packet khác protocol | Một JSON object mỗi dòng, đúng thứ tự, mark/skip | Output JSONL đọc được và packet id không sai |
-| `test_error_handling.py` | Header thiếu/truncated/malformed/byte lỗi | Event `UNSUPPORTED`, `INCOMPLETE` hoặc `MALFORMED` | Một packet hỏng không dừng các packet sau |
-| `test_event_schema.py` | Các event hợp lệ và lỗi | Danh sách lỗi schema rỗng | Event output đúng schema |
-| `test_nonstandard_ports.py` | HTTP/DNS/SMTP trên port khác port mặc định | Application protocol vẫn được nhận diện | Nhận diện dựa trên nội dung và port hợp lý |
-| `test_unknown_policy.py` | Unknown protocol với policy `mark`/`skip` | Event được giữ hoặc bỏ đúng policy | Chính sách unknown hoạt động đúng |
+| `test_mandatory_cases.py` | 12 case: TCP handshake/data, UDP, HTTP, DNS, SMTP, unknown, malformed | `output/evidence/` có 12 PCAP/log; HTTP, DNS, SMTP nhận diện đúng; malformed có `MALFORMED`; tất cả exit code `0` | **12/12 PASS** |
+| `test_pipeline.py` | TCP, UDP, HTTP, DNS, SMTP, unsupported và unknown | Event có field protocol/payload/header đúng; JSON serialize được | **13/13 PASS** |
+| `test_capture_cli.py` | Live capture giả lập, PCAP, count/filter, option sai, capture lỗi | Callback dùng đúng; option sai trả `2`; lỗi capture trả `1`; interrupt trả `130` | **9/9 PASS** |
+| `test_jsonl_log.py` | Nhiều packet, mark/skip, PCAP bị cắt | Mỗi dòng là JSON; thứ tự packet giữ nguyên; unknown skip đúng; lỗi truncated được ghi | **7/7 PASS** |
+| `test_error_handling.py` | Header thiếu, packet malformed/truncated, byte lỗi, reader lỗi | Parser tạo `UNSUPPORTED`/`INCOMPLETE`/`MALFORMED`; packet sau vẫn chạy | **14/14 PASS** |
+| `test_event_schema.py` | Event TCP/HTTP/DNS/SMTP và event sai schema | `validate_event()` trả danh sách rỗng cho event hợp lệ; JSON-compatible | **10/10 PASS** |
+| `test_nonstandard_ports.py` | HTTP/DNS/SMTP trên port không chuẩn | Protocol vẫn nhận diện theo payload; payload không có cấu trúc vẫn là `UNKNOWN` | **8/8 PASS** |
+| `test_unknown_policy.py` | Unknown với `mark` và `skip` | `mark` giữ diagnostic; `skip` bỏ event unknown; policy sai bị từ chối | **6/6 PASS** |
 
-Evidence Bài 1 nằm tại:
+**Tổng Bài 1: 79/79 PASS — module parser/capture ĐẠT theo các test đã chạy.**
+
+Evidence Bài 1:
 
 - Input: `TEST/baitap1/parser/input/pcap/`.
 - Output thật: `TEST/baitap1/parser/output/evidence/`.
-- Kết quả từng nhóm test: `TEST/baitap1/parser/output/results/`.
+- Log test: `TEST/baitap1/parser/output/results/all_tests.txt`.
 
-## 5. Bài 2 — Decoder, Preprocessor, Flow Tracker
+## 5. Báo cáo Bài 2 — Decoder, Preprocessor, Flow Tracker
 
-### Bảng testcase bắt buộc
+### Kết quả T01–T14
 
-| ID | Module | Input/use case | Output cần kiểm tra | Đạt yêu cầu khi |
-|---|---|---|---|---|
-| T01 | Decoder | URI percent-encoding và form có dấu `+` | `decoded_http_target`, `decoded_form`, raw field còn nguyên | Decode URI đúng; `+` chỉ thành space trong form |
-| T02 | Decoder | HTML entity như `&lt;script&gt;` | `decoded_body` thành text đúng | Decode body đúng và không ghi đè body gốc |
-| T03 | Decoder | MIME Base64 và Quoted-Printable | `mime_parts`, `decoded_body`, status | Chỉ decode khi header chỉ định encoding |
-| T04 | Decoder | Payload có byte UTF-8 không hợp lệ | `decode_status=PARTIAL` và reason | Không crash, vẫn xử lý packet sau |
-| T05 | Preprocessor | Protocol/header/domain viết hoa, timestamp | Event normalized | Chuẩn hóa đúng nhưng không đổi ý nghĩa URI/path |
-| T06 | Preprocessor | Event thiếu field tùy chọn | `null`, `[]`, `{}` nhất quán | Không exception, event vẫn có schema ổn định |
-| T07 | Flow Tracker | TCP `SYN → SYN/ACK → ACK` | Một flow, `ESTABLISHED` | Theo dõi handshake đúng |
-| T08 | Flow Tracker | Packet A→B và B→A | Cùng `flow_id`, direction đúng | Gộp được flow hai chiều |
-| T09 | Flow Tracker | FIN/ACK và RST | `CLOSING → CLOSED` hoặc `RESET` | Đóng/reset đúng state |
-| T10 | Flow Tracker | DNS UDP query/response | Một flow, count/byte đúng | UDP được gom theo tuple hai chiều |
-| T11 | Flow Tracker | Nhiều endpoint/port | Nhiều flow riêng | Không gộp nhầm connection |
-| T12 | Flow Tracker | Không có packet mới quá timeout | Flow được export và xóa | Timeout dùng timestamp packet |
-| T13 | Flow Tracker | Nhiều packet hai chiều | duration, packet/byte count, flags | Thống kê flow đúng |
-| T14 | Preprocessor | IP/port/time/protocol/event sai | `invalid`, `reason`, mark/skip | Event lỗi không tạo flow và không dừng chương trình |
+| ID | Input/use case đã chạy | Output thực tế | Kết quả |
+|---|---|---|---|
+| T01 | URI percent-encoding và form có `+` | `decoded_http_target` được giải mã; form `Alice+Smith` thành `Alice Smith`; raw target vẫn còn | **PASS** |
+| T02 | Body có `&lt;script&gt;` | `decoded_body` là `<script>x</script>`; body gốc không bị ghi đè | **PASS** |
+| T03 | MIME Base64 và Quoted-Printable | Body lần lượt decode thành `Hello` và `Xin chào` | **PASS** |
+| T04 | Payload có byte `0xff` không hợp lệ | `decode_status=PARTIAL`, có reason; không làm dừng test sau | **PASS** |
+| T05 | Protocol/header/domain/timestamp khác kiểu chữ | Event được normalize, header/domain đúng dạng chuẩn | **PASS** |
+| T06 | Event thiếu field tùy chọn | Scalar/list/header được điền `null`/`[]`/`{}`; không exception | **PASS** |
+| T07 | TCP `SYN → SYN/ACK → ACK` | Flow chuyển sang `ESTABLISHED` | **PASS** |
+| T08 | Packet A→B và B→A | Hai packet có cùng `flow_id`; direction là forward/backward | **PASS** |
+| T09 | FIN/ACK và RST | FIN tạo `CLOSING` rồi `CLOSED`; RST tạo `RESET` | **PASS** |
+| T10 | DNS UDP query/response | Một flow `UDP/DNS`, packet/byte count được cập nhật | **PASS** |
+| T11 | Nhiều endpoint/port đồng thời | Các connection có flow riêng, không bị gộp nhầm | **PASS** |
+| T12 | Không có packet mới quá timeout | Flow được export và xóa khỏi active table | **PASS** |
+| T13 | Nhiều packet hai chiều | Duration, packet/byte count và TCP flags khớp expected assertion | **PASS** |
+| T14 | IP/port/time/protocol/event sai | Event được đánh `invalid`, có reason; mark/skip không làm dừng pipeline | **PASS** |
 
-### Test integration qua pipeline chung
+### Kết quả theo module
 
-`TEST/baitap2/integration/test_main.py` chạy **root `main.py` thật** bằng
-`subprocess`, không gọi tắt từng hàm. Nó kiểm tra:
+| Module/test file | Đã chạy | Output/log thực tế | Trạng thái |
+|---|---:|---|---|
+| Decoder — `test_decoder.py` | 4/4 | `TEST/baitap2/decoder/output/T01.txt`–`T04.txt`: đều `OK` | **ĐẠT** |
+| Preprocessor — `test_preprocessor.py` | 3/3 | `T05.txt`, `T06.txt`, `T14.txt`: đều `OK` | **ĐẠT** |
+| Flow Tracker — `test_flow_tracker.py` | 7/7 | `T07.txt`–`T13.txt`: đều `OK` | **ĐẠT** |
+| Integration — `test_main.py` | 4/4 | `http_request`: 9 events/1 flow `CLOSED`; byte lỗi vẫn xử lý MIME; truncated được báo `INCOMPLETE` | **ĐẠT** |
 
-| Use case | Input | Output kiểm tra |
-|---|---|---|
-| Parser reuse | HTTP PCAP | Event có field do parser Bài 1 tạo |
-| HTTP TCP end-to-end | Handshake + request + response + FIN | Event decoded và flow `CLOSED` |
-| Byte lỗi rồi MIME | HTTP payload lỗi, sau đó SMTP MIME | Packet đầu `PARTIAL`, packet sau vẫn decode |
-| Invalid policy | Packet malformed với `mark`/`skip` | Event invalid được mark hoặc bỏ đúng |
-| Truncated PCAP | File PCAP bị cắt | Record `INCOMPLETE`, flow đọc được vẫn được export |
+**Tổng Bài 2: 18/18 PASS — Decoder, Preprocessor, Flow Tracker và pipeline
+được nối đúng theo các test đã chạy.**
 
-Evidence Bài 2 nằm tại:
+Evidence Bài 2:
 
 - Input PCAP: `TEST/baitap2/integration/input/pcap/`.
 - Output event/flow thật: `TEST/baitap2/integration/output/evidence/`.
-- Kết quả test: thư mục `output/` của từng module.
+- Log toàn bộ: `TEST/baitap2/integration/output/results/whole_suite.txt`.
+- Summary flow thật: `TEST/baitap2/integration/output/evidence/summary.txt`.
 
-## 6. Kết quả và kết luận module
+## 6. Kết luận tổng
 
-Kết quả đã kiểm tra hiện tại: **97 tests — OK** (79 test Bài 1 và 18 test
-Bài 2). Bản ghi toàn bộ lần chạy nằm ở
-`TEST/baitap2/integration/output/results/whole_suite.txt`. Sau khi chạy lại,
-kết quả phải có `OK`, không có `FAIL` hoặc `ERROR`. Các file `.txt` trong các thư mục `output/` là bản lưu của những lần chạy đã
-thực hiện; các file JSONL/PCAP là evidence để kiểm tra lại input và output.
+Lần chạy đã ghi nhận:
 
-| Module | Test chính | Kết luận cần đạt |
-|---|---|---|
-| Bài 1 parser/capture | 12 mandatory cases + CLI/schema/error tests | Đạt: parse packet, ghi JSONL, xử lý lỗi |
-| Decoder | T01–T04 | Đạt: decode đúng và không crash vì byte lỗi |
-| Preprocessor | T05, T06, T14 | Đạt: normalize/validate/mark-skip đúng |
-| Flow Tracker | T07–T13 | Đạt: flow hai chiều, state, timeout, statistics đúng |
-| Pipeline chung | integration tests | Đạt: các module nối đúng qua root `main.py` |
+```text
+Bài 1: 79/79 PASS
+Bài 2: 18/18 PASS
+Tổng:  97/97 PASS
+```
 
-Nếu một test fail, module tương ứng **chưa được kết luận đạt**; phải đọc output
-của test đó để biết input nào làm fail và field output nào sai.
+Vì không có `FAIL` hoặc `ERROR`, các module trong phạm vi các testcase trên
+được đánh dấu **ĐẠT**. Kết luận này dựa trên output/log đã lưu, không phải chỉ
+là danh sách yêu cầu lý thuyết.
