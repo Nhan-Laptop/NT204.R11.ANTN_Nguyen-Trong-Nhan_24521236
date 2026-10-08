@@ -1,0 +1,18 @@
+{
+  "T05": {
+    "description": "Normalize protocol, headers, domain and timestamp",
+    "transport_protocol": "tcp",
+    "application_protocol": "http",
+    "headers": {"Host": "EXAMPLE.TEST"}
+  },
+  "T06": {
+    "description": "Optional fields are absent",
+    "optional_fields": "missing"
+  },
+  "T14": {
+    "description": "Invalid IP, port, timestamp or protocol",
+    "src_ip": "not-an-ip",
+    "src_port": 70000,
+    "timestamp": "not-a-time"
+  }
+}

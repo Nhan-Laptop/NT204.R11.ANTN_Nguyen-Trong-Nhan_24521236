@@ -1,0 +1,19 @@
+{
+  "T01": {
+    "description": "URI percent decoding and form plus handling",
+    "http_target": "/Search?q=%27%20OR%201%3D1",
+    "form_body": "name=Alice+Smith&literal=%2B"
+  },
+  "T02": {
+    "description": "HTML entity decoding",
+    "body": "&lt;script&gt;x&lt;/script&gt;"
+  },
+  "T03": {
+    "description": "MIME transfer encodings",
+    "encodings": ["base64", "quoted-printable"]
+  },
+  "T04": {
+    "description": "Invalid UTF-8 bytes",
+    "raw_bytes_hex": "696e76616c69643a ff"
+  }
+}

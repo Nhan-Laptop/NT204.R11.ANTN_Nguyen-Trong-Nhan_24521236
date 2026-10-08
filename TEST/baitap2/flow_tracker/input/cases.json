@@ -1,0 +1,9 @@
+{
+  "T07": {"description": "TCP SYN, SYN/ACK, ACK handshake"},
+  "T08": {"description": "Forward and backward packets share one flow"},
+  "T09": {"description": "TCP FIN closure and RST reset"},
+  "T10": {"description": "UDP DNS query and response"},
+  "T11": {"description": "Concurrent flows stay separate"},
+  "T12": {"description": "Idle flow timeout uses packet timestamps"},
+  "T13": {"description": "Packet, byte, flag and duration statistics"}
+}

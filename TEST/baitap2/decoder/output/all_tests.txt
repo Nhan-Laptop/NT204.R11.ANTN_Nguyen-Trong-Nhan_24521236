@@ -1,0 +1,9 @@
+test_T01_url_decoding (test_decoder.DecoderTests.test_T01_url_decoding) ... ok
+test_T02_html_entities (test_decoder.DecoderTests.test_T02_html_entities) ... ok
+test_T03_mime_base64_and_qp (test_decoder.DecoderTests.test_T03_mime_base64_and_qp) ... ok
+test_T04_invalid_bytes_continue (test_decoder.DecoderTests.test_T04_invalid_bytes_continue) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.006s
+
+OK

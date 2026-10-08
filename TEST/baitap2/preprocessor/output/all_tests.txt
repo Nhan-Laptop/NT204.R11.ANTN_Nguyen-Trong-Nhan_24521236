@@ -1,0 +1,8 @@
+test_T05_normalization (test_preprocessor.PreprocessorTests.test_T05_normalization) ... ok
+test_T06_missing_optional_fields (test_preprocessor.PreprocessorTests.test_T06_missing_optional_fields) ... ok
+test_T14_malformed_and_unsupported (test_preprocessor.PreprocessorTests.test_T14_malformed_and_unsupported) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+OK

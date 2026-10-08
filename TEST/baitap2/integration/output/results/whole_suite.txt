@@ -1,0 +1,108 @@
+/home/nhanlaptop/miniconda3/lib/python3.14/site-packages/scapy/layers/tls/crypto/groups.py:25: CryptographyDeprecationWarning: Diffie-Hellman over finite fields (FFDH) is deprecated and support will be removed in a future release. Use a more modern key exchange algorithm.
+  from cryptography.hazmat.primitives.asymmetric.dh import DHParameterNumbers
+test_capture_errors_have_readable_messages (baitap1.parser.test_capture_cli.CaptureCLITests.test_capture_errors_have_readable_messages) ... ok
+test_handler_prints_one_normalized_json_event (baitap1.parser.test_capture_cli.CaptureCLITests.test_handler_prints_one_normalized_json_event) ... ok
+test_interrupt_is_handled (baitap1.parser.test_capture_cli.CaptureCLITests.test_interrupt_is_handled) ... ok
+test_invalid_arguments_do_not_start_capture (baitap1.parser.test_capture_cli.CaptureCLITests.test_invalid_arguments_do_not_start_capture) ... ok
+test_live_capture_defaults (baitap1.parser.test_capture_cli.CaptureCLITests.test_live_capture_defaults) ... ok
+test_live_capture_uses_shared_handler (baitap1.parser.test_capture_cli.CaptureCLITests.test_live_capture_uses_shared_handler) ... ok
+test_output_file_contains_json_lines (baitap1.parser.test_capture_cli.CaptureCLITests.test_output_file_contains_json_lines) ... ok
+test_pcap_uses_shared_handler (baitap1.parser.test_capture_cli.CaptureCLITests.test_pcap_uses_shared_handler) ... ok
+test_real_pcap_playback_preserves_timestamp_and_count (baitap1.parser.test_capture_cli.CaptureCLITests.test_real_pcap_playback_preserves_timestamp_and_count) ... ok
+test_capture_failure_returns_error_code_instead_of_crashing (baitap1.parser.test_error_handling.ErrorHandlingTests.test_capture_failure_returns_error_code_instead_of_crashing) ... ok
+test_empty_payload_does_not_crash (baitap1.parser.test_error_handling.ErrorHandlingTests.test_empty_payload_does_not_crash) ... ok
+test_error_event_is_schema_valid (baitap1.parser.test_error_handling.ErrorHandlingTests.test_error_event_is_schema_valid) ... ok
+test_interrupt_returns_shell_convention (baitap1.parser.test_error_handling.ErrorHandlingTests.test_interrupt_returns_shell_convention) ... ok
+test_malformed_ipv4_header_does_not_crash (baitap1.parser.test_error_handling.ErrorHandlingTests.test_malformed_ipv4_header_does_not_crash) ... ok
+test_missing_ipv4_header_does_not_crash (baitap1.parser.test_error_handling.ErrorHandlingTests.test_missing_ipv4_header_does_not_crash) ... ok
+test_parser_failure_is_contained (baitap1.parser.test_error_handling.ErrorHandlingTests.test_parser_failure_is_contained) ... ok
+test_truncated_file_still_processes_readable_packets (baitap1.parser.test_error_handling.ErrorHandlingTests.test_truncated_file_still_processes_readable_packets) ... ok
+test_truncated_record_data_is_reported (baitap1.parser.test_error_handling.ErrorHandlingTests.test_truncated_record_data_is_reported) ... ok
+test_truncated_transport_header_does_not_crash (baitap1.parser.test_error_handling.ErrorHandlingTests.test_truncated_transport_header_does_not_crash) ... ok
+test_undecodable_dns_payload_does_not_crash (baitap1.parser.test_error_handling.ErrorHandlingTests.test_undecodable_dns_payload_does_not_crash) ... ok
+test_undecodable_http_body_does_not_crash (baitap1.parser.test_error_handling.ErrorHandlingTests.test_undecodable_http_body_does_not_crash) ... ok
+test_unreadable_record_is_reported_without_stopping (baitap1.parser.test_error_handling.ErrorHandlingTests.test_unreadable_record_is_reported_without_stopping) ... ok
+test_unsupported_transport_protocol_does_not_crash (baitap1.parser.test_error_handling.ErrorHandlingTests.test_unsupported_transport_protocol_does_not_crash) ... ok
+test_dns_event_carries_documented_fields (baitap1.parser.test_event_schema.NormalizedEventTests.test_dns_event_carries_documented_fields) ... ok
+test_every_event_has_the_common_fields (baitap1.parser.test_event_schema.NormalizedEventTests.test_every_event_has_the_common_fields) ... ok
+test_every_event_is_json_compatible (baitap1.parser.test_event_schema.NormalizedEventTests.test_every_event_is_json_compatible) ... ok
+test_every_event_matches_the_schema (baitap1.parser.test_event_schema.NormalizedEventTests.test_every_event_matches_the_schema) ... ok
+test_http_event_carries_documented_fields (baitap1.parser.test_event_schema.NormalizedEventTests.test_http_event_carries_documented_fields) ... ok
+test_smtp_event_carries_documented_fields (baitap1.parser.test_event_schema.NormalizedEventTests.test_smtp_event_carries_documented_fields) ... ok
+test_validation_rejects_non_json_values (baitap1.parser.test_event_schema.NormalizedEventTests.test_validation_rejects_non_json_values) ... ok
+test_validation_reports_invalid_values (baitap1.parser.test_event_schema.NormalizedEventTests.test_validation_reports_invalid_values) ... ok
+test_validation_reports_missing_common_fields (baitap1.parser.test_event_schema.NormalizedEventTests.test_validation_reports_missing_common_fields) ... ok
+test_validation_reports_undocumented_fields (baitap1.parser.test_event_schema.NormalizedEventTests.test_validation_reports_undocumented_fields) ... ok
+test_log_has_one_json_object_per_line (baitap1.parser.test_jsonl_log.JsonLinesLogTests.test_log_has_one_json_object_per_line) ... ok
+test_log_keeps_capture_order_and_protocols (baitap1.parser.test_jsonl_log.JsonLinesLogTests.test_log_keeps_capture_order_and_protocols) ... ok
+test_log_records_capture_failure (baitap1.parser.test_jsonl_log.JsonLinesLogTests.test_log_records_capture_failure) ... ok
+test_log_records_truncated_pcap_notice (baitap1.parser.test_jsonl_log.JsonLinesLogTests.test_log_records_truncated_pcap_notice) ... ok
+test_skip_policy_writes_one_line_per_written_event (baitap1.parser.test_jsonl_log.JsonLinesLogTests.test_skip_policy_writes_one_line_per_written_event) ... ok
+test_standard_output_is_also_json_lines (baitap1.parser.test_jsonl_log.JsonLinesLogTests.test_standard_output_is_also_json_lines) ... ok
+test_writer_counts_processed_and_written_events (baitap1.parser.test_jsonl_log.JsonLinesLogTests.test_writer_counts_processed_and_written_events) ... ok
+test_dns_query (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_dns_query) ... ok
+test_dns_response (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_dns_response) ... ok
+test_http_get (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_http_get) ... ok
+test_http_post (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_http_post) ... ok
+test_http_response (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_http_response) ... ok
+test_malformed_packet_does_not_crash (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_malformed_packet_does_not_crash) ... ok
+test_smtp_command (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_smtp_command) ... ok
+test_smtp_response (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_smtp_response) ... ok
+test_tcp_data (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_tcp_data) ... ok
+test_tcp_handshake (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_tcp_handshake) ... ok
+test_udp (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_udp) ... ok
+test_unknown_protocol_does_not_crash (baitap1.parser.test_mandatory_cases.MandatoryCaseTests.test_unknown_protocol_does_not_crash) ... ok
+test_dns_over_tcp_with_length_prefix_on_non_standard_port (baitap1.parser.test_nonstandard_ports.NonStandardPortTests.test_dns_over_tcp_with_length_prefix_on_non_standard_port) ... ok
+test_dns_query_on_non_standard_port (baitap1.parser.test_nonstandard_ports.NonStandardPortTests.test_dns_query_on_non_standard_port) ... ok
+test_dns_response_on_non_standard_port (baitap1.parser.test_nonstandard_ports.NonStandardPortTests.test_dns_response_on_non_standard_port) ... ok
+test_http_request_on_non_standard_port (baitap1.parser.test_nonstandard_ports.NonStandardPortTests.test_http_request_on_non_standard_port) ... ok
+test_http_response_on_non_standard_port (baitap1.parser.test_nonstandard_ports.NonStandardPortTests.test_http_response_on_non_standard_port) ... ok
+test_smtp_command_on_non_standard_port (baitap1.parser.test_nonstandard_ports.NonStandardPortTests.test_smtp_command_on_non_standard_port) ... ok
+test_smtp_response_on_non_standard_port (baitap1.parser.test_nonstandard_ports.NonStandardPortTests.test_smtp_response_on_non_standard_port) ... ok
+test_unstructured_payload_on_high_port_stays_unknown (baitap1.parser.test_nonstandard_ports.NonStandardPortTests.test_unstructured_payload_on_high_port_stays_unknown) ... ok
+test_dns_query (baitap1.parser.test_pipeline.PacketPipelineTests.test_dns_query) ... ok
+test_dns_response (baitap1.parser.test_pipeline.PacketPipelineTests.test_dns_response) ... ok
+test_http_get_on_non_standard_port (baitap1.parser.test_pipeline.PacketPipelineTests.test_http_get_on_non_standard_port) ... ok
+test_http_post_with_body (baitap1.parser.test_pipeline.PacketPipelineTests.test_http_post_with_body) ... ok
+test_http_response (baitap1.parser.test_pipeline.PacketPipelineTests.test_http_response) ... ok
+test_malformed_packet_does_not_crash (baitap1.parser.test_pipeline.PacketPipelineTests.test_malformed_packet_does_not_crash) ... ok
+test_smtp_commands (baitap1.parser.test_pipeline.PacketPipelineTests.test_smtp_commands) ... ok
+test_smtp_response (baitap1.parser.test_pipeline.PacketPipelineTests.test_smtp_response) ... ok
+test_tcp_data (baitap1.parser.test_pipeline.PacketPipelineTests.test_tcp_data) ... ok
+test_tcp_handshake (baitap1.parser.test_pipeline.PacketPipelineTests.test_tcp_handshake) ... ok
+test_udp (baitap1.parser.test_pipeline.PacketPipelineTests.test_udp) ... ok
+test_unknown_protocol_does_not_crash (baitap1.parser.test_pipeline.PacketPipelineTests.test_unknown_protocol_does_not_crash) ... ok
+test_unsupported_network_protocol_does_not_crash (baitap1.parser.test_pipeline.PacketPipelineTests.test_unsupported_network_protocol_does_not_crash) ... ok
+test_handler_rejects_invalid_policy (baitap1.parser.test_unknown_policy.UnknownPolicyTests.test_handler_rejects_invalid_policy) ... ok
+test_invalid_policy_is_rejected_before_capture (baitap1.parser.test_unknown_policy.UnknownPolicyTests.test_invalid_policy_is_rejected_before_capture) ... ok
+test_marked_unknown_event_keeps_diagnostics (baitap1.parser.test_unknown_policy.UnknownPolicyTests.test_marked_unknown_event_keeps_diagnostics) ... ok
+test_skip_policy_applies_to_standard_output (baitap1.parser.test_unknown_policy.UnknownPolicyTests.test_skip_policy_applies_to_standard_output) ... ok
+test_skip_policy_drops_unknown_events (baitap1.parser.test_unknown_policy.UnknownPolicyTests.test_skip_policy_drops_unknown_events) ... ok
+test_unknown_packets_are_marked_by_default (baitap1.parser.test_unknown_policy.UnknownPolicyTests.test_unknown_packets_are_marked_by_default) ... ok
+test_T01_url_decoding (baitap2.decoder.test_decoder.DecoderTests.test_T01_url_decoding) ... ok
+test_T02_html_entities (baitap2.decoder.test_decoder.DecoderTests.test_T02_html_entities) ... ok
+test_T03_mime_base64_and_qp (baitap2.decoder.test_decoder.DecoderTests.test_T03_mime_base64_and_qp) ... ok
+test_T04_invalid_bytes_continue (baitap2.decoder.test_decoder.DecoderTests.test_T04_invalid_bytes_continue) ... ok
+test_T07_tcp_handshake (baitap2.flow_tracker.test_flow_tracker.FlowTests.test_T07_tcp_handshake) ... ok
+test_T08_bidirectional_flow (baitap2.flow_tracker.test_flow_tracker.FlowTests.test_T08_bidirectional_flow) ... ok
+test_T09_tcp_close_and_reset (baitap2.flow_tracker.test_flow_tracker.FlowTests.test_T09_tcp_close_and_reset) ... ok
+test_T10_udp_dns_query_response (baitap2.flow_tracker.test_flow_tracker.FlowTests.test_T10_udp_dns_query_response) ... ok
+test_T11_concurrent_flows (baitap2.flow_tracker.test_flow_tracker.FlowTests.test_T11_concurrent_flows) ... ok
+test_T12_idle_timeout_and_cleanup (baitap2.flow_tracker.test_flow_tracker.FlowTests.test_T12_idle_timeout_and_cleanup) ... ok
+test_T13_statistics (baitap2.flow_tracker.test_flow_tracker.FlowTests.test_T13_statistics) ... ok
+test_bad_bytes_then_mime_pcap (baitap2.integration.test_main.RunnerTests.test_bad_bytes_then_mime_pcap) ... ok
+test_bad_packet_policy_and_unreadable_input (baitap2.integration.test_main.RunnerTests.test_bad_packet_policy_and_unreadable_input) ... WARNING: getmacbyip failed on [Errno 1] Operation not permitted
+WARNING: MAC address to reach destination not found. Using broadcast.
+WARNING: getmacbyip failed on [Errno 1] Operation not permitted
+WARNING: MAC address to reach destination not found. Using broadcast.
+ok
+test_end_to_end_http_tcp (baitap2.integration.test_main.RunnerTests.test_end_to_end_http_tcp) ... ok
+test_parser_reuse_smoke (baitap2.integration.test_main.RunnerTests.test_parser_reuse_smoke) ... ok
+test_T05_normalization (baitap2.preprocessor.test_preprocessor.PreprocessorTests.test_T05_normalization) ... ok
+test_T06_missing_optional_fields (baitap2.preprocessor.test_preprocessor.PreprocessorTests.test_T06_missing_optional_fields) ... ok
+test_T14_malformed_and_unsupported (baitap2.preprocessor.test_preprocessor.PreprocessorTests.test_T14_malformed_and_unsupported) ... ok
+
+----------------------------------------------------------------------
+Ran 97 tests in 10.665s
+
+OK
