@@ -1,0 +1,4 @@
+alert tcp any any -> any 80 (msg:"1 distance 0 within 20"; content:"GET"; content:"HTTP"; distance:0; within:20; sid:1; rev:1;)
+alert tcp any any -> any 80 (msg:"2 distance 0 within 10"; content:"GET"; content:"HTTP"; distance:0; within:10; sid:2; rev:1;)
+alert tcp any any -> any 80 (msg:"3 distance 9"; content:"GET"; content:"HTTP"; distance:9; sid:3; rev:1;)
+alert tcp any any -> any 80 (msg:"4 distance 8 within 4"; content:"GET"; content:"HTTP"; distance:8; within:4; sid:4; rev:1;)
