@@ -1,0 +1,3 @@
+alert tcp any any -> any any (msg:"1 to_server,established"; flow:to_server,established; content:"GET"; sid:1; rev:1;)
+alert tcp any any -> any any (msg:"2 to_client,established"; flow:to_client,established; content:"200 OK"; sid:2; rev:1;)
+alert tcp any any -> any any (msg:"3 to_server,not_established"; flow:to_server,not_established; content:"GET"; sid:3; rev:1;)
