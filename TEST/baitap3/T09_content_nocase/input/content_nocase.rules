@@ -1,0 +1,2 @@
+alert tcp any any -> any 80 (msg:"1 khong nocase"; content:"admin"; sid:1; rev:1;)
+alert tcp any any -> any 80 (msg:"2 co nocase"; content:"admin"; nocase; sid:2; rev:1;)
