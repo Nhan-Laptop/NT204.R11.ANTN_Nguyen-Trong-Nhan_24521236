@@ -1,0 +1,8 @@
+# Rule mẫu cho test T01: 2 rule hợp lệ, xen kẽ comment và dòng trống.
+
+alert tcp any any -> any 80 (msg:"Web request"; content:"GET"; sid:1; rev:1;)
+
+# comment giữa file
+   
+alert udp any any -> any 53 (msg:"DNS query"; sid:2; rev:1;)
+# comment cuối file
