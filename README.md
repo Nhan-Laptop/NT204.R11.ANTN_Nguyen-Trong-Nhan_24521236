@@ -5,7 +5,7 @@ Repository cho các phần bài tập IDS/IPS của môn NT204.
 ## Ứng dụng chung
 
 Chỉ có một entry point ở root: `main.py`. Đây là pipeline hoàn chỉnh, không
-chia thành lệnh Bài 1/Bài 2:
+chia thành lệnh từng bài:
 
 ```text
 PCAP/interface
@@ -14,6 +14,7 @@ PCAP/interface
   → Preprocessor
   → Flow/Connection Tracker
   → events.jsonl + flows.jsonl
+  → Core Engine (Bài 3, khi có --rules) → detections.jsonl
 ```
 
 Các bài sau có thể nối thêm module vào pipeline này mà không cần tạo thêm
@@ -24,7 +25,8 @@ Các bài sau có thể nối thêm module vào pipeline này mà không cần t
 | `main.py` | App/pipeline chung |
 | `BaiTap1:Packet_CAPTURER_AND_PARSER/` | Parser và capture module |
 | `BaiTap2:DECODER_PREPROCESSOR_FLOW_CONNECTION_TRACKER/` | Decoder, Preprocessor, Flow Tracker |
-| `TEST/` | Toàn bộ test, nằm ngoài hai thư mục bài tập |
+| `BaiTap3:Core_Engine_IDS/` | Core Engine: Rule Loader, Parser, Repository, Matcher, Evaluator, Detection Event |
+| `TEST/` | Toàn bộ test, nằm ngoài các thư mục bài tập |
 | `TEST/README.md` | Báo cáo input, output, use case và kết quả thực tế |
 
 ## Chạy app
@@ -42,6 +44,13 @@ python main.py --pcap input.pcap \
   --output events.jsonl --flows-output flows.jsonl
 ```
 
+Chạy kèm Core Engine (rule Snort):
+
+```bash
+python main.py --pcap input.pcap \
+  --rules "BaiTap3:Core_Engine_IDS/rules/sample.rules" --detections-output detections.jsonl
+```
+
 Chạy với interface live:
 
 ```bash
@@ -52,15 +61,17 @@ python main.py --interface eth0 --count 20 \
 ## Chạy test
 
 ```bash
-python -m unittest discover -s TEST -v
+python3 -m TEST.baitap1.tcp_handshake.test_tcp_handshake
+python3 -m TEST.baitap3.T14_detection_event.test_detection_event
 ```
 
-Kết quả thực tế và evidence được ghi trong
-[`TEST/README.md`](TEST/README.md).
+Mỗi thư mục trong `TEST/` có một file test chạy ra output và `readme.md` đánh giá output đó.
+Danh sách lệnh và kết quả: [`TEST/README.md`](TEST/README.md).
+
 
 ## AI assistance disclosure
 
-AI tool used: **OpenAI ChatGPT through the pi coding agent**.
+AI tools used: **OpenAI ChatGPT through the pi coding agent** (Bài 1, 2) và **Claude Code** (cấu trúc lại test Bài 1, 2; viết Bài 3 và test của nó).
 
 AI hỗ trợ thảo luận thiết kế, viết một phần code/test và sắp xếp tài liệu.
 Sinh viên tự kiểm tra code bằng test và chịu trách nhiệm về kết quả nộp.
