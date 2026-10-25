@@ -47,16 +47,11 @@ Các option chính: `--pcap` hoặc `--interface`, `--count`, `--timeout`,
 
 ## Test và kết quả thực tế
 
-Test nằm ngoài module tại `TEST/baitap2/`:
+14 test case bắt buộc (mục 6 của đề) nằm ở `TEST/baitap2/`, mỗi test case một folder đúng mã trong đề:
+`T01_http_url_decode`, `T02_html_entity`, `T03_smtp_base64_qp`, `T04_invalid_bytes`, `T05_normalization`,
+`T06_missing_field`, `T07_tcp_handshake`, `T08_bidirectional_flow`, `T09_tcp_close`, `T10_udp_query_response`,
+`T11_concurrent_flows`, `T12_idle_timeout`, `T13_statistics`, `T14_malformed_event`.
 
-| Thư mục | Test | Kết quả |
-|---|---|---:|
-| `decoder/` | T01–T04 | **4/4 PASS** |
-| `preprocessor/` | T05, T06, T14 | **3/3 PASS** |
-| `flow_tracker/` | T07–T13 | **7/7 PASS** |
-| `integration/` | Chạy root `main.py` thật qua subprocess | **4/4 PASS** |
-
-Tổng Bài 2: **18/18 PASS**. PCAP input nằm trong
-`TEST/baitap2/integration/input/pcap/`; event/flow output và log nằm trong
-`TEST/baitap2/integration/output/`. Báo cáo use case và output thực tế nằm ở
-`TEST/README.md`.
+Mỗi folder có file test (chạy ra output), `readme.md` đánh giá output kèm ảnh chụp terminal.
+Ví dụ chạy: `python3 -m TEST.baitap2.T07_tcp_handshake.test_tcp_handshake`.
+Test chạy `main.py` thật với PCAP nằm ở `TEST/baitap2/khac/integration/`. Tổng hợp ở `TEST/README.md`.
