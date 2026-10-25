@@ -1,0 +1,7 @@
+# Rule mẫu cho Bài 3
+alert tcp any any -> 192.168.1.0/24 80 (msg:"Directory traversal detected"; content:"../"; sid:100001; rev:1; classtype:web-application-attack; priority:1;)
+
+alert tcp any any -> any 80 (msg:"SYN to web"; flags:S; flow:to_server,not_established; sid:100002; rev:1;)
+alert udp any any -> any 53 (msg:"Small DNS"; dsize:<64; sid:100003; rev:1;)
+alert tcp any any -> any any (msg:"bad"; sid:100004 rev:1;)
+alert tcp any any -> any any (msg:"uses pcre"; pcre:"/abc/"; sid:100005; rev:1;)
