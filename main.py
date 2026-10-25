@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 from pathlib import Path
 import sys
 from typing import Any, TextIO
@@ -25,7 +26,8 @@ from scapy.error import Scapy_Exception
 ROOT = Path(__file__).resolve().parent
 HOMEWORK1 = ROOT / "BaiTap1:Packet_CAPTURER_AND_PARSER"
 HOMEWORK2 = ROOT / "BaiTap2:DECODER_PREPROCESSOR_FLOW_CONNECTION_TRACKER"
-for path in (HOMEWORK1, HOMEWORK2):
+HOMEWORK3 = ROOT / "BaiTap3:Core_Engine_IDS"
+for path in (HOMEWORK1, HOMEWORK2, HOMEWORK3):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
@@ -33,6 +35,9 @@ from parsers import error_event, parse_packet  # noqa: E402
 from decoder import decode_event  # noqa: E402
 from preprocessor import preprocess_event  # noqa: E402
 from flow_tracker import finish_flows, new_tracker, track_event  # noqa: E402
+from rule_loader import load_rule_files  # noqa: E402
+from rule_repository import build_repository  # noqa: E402
+from rule_evaluator import evaluate_event, new_engine  # noqa: E402
 
 
 def packet_to_event(packet: Any, packet_id: int) -> tuple[dict[str, Any], bytes]:
@@ -109,6 +114,8 @@ def handle_packet(
     *,
     max_decode_size: int,
     invalid_policy: str,
+    engine: dict[str, Any] | None = None,
+    detections: TextIO | None = None,
 ) -> int:
     """Run one captured packet through the complete pipeline."""
     packet_id += 1
@@ -122,6 +129,9 @@ def handle_packet(
     )
     if event.get("processing_action") != "skip":
         write_jsonl(events, event)
+        if engine is not None:
+            for detection in evaluate_event(engine, event, raw_payload):
+                write_jsonl(detections, detection)
     for flow in completed:
         write_jsonl(flows, flow)
     return packet_id
@@ -166,6 +176,8 @@ def run_pcap(
     count: int,
     max_decode_size: int,
     invalid_policy: str,
+    engine: dict[str, Any] | None = None,
+    detections: TextIO | None = None,
 ) -> int:
     """Read a PCAP and send every readable packet into the same pipeline."""
     packet_id = 0
@@ -199,6 +211,8 @@ def run_pcap(
                 flows,
                 max_decode_size=max_decode_size,
                 invalid_policy=invalid_policy,
+                engine=engine,
+                detections=detections,
             )
     finish_tracker(tracker, flows, end_reason)
     return 0
@@ -215,6 +229,8 @@ def run_interface(
     packet_filter: str | None,
     max_decode_size: int,
     invalid_policy: str,
+    engine: dict[str, Any] | None = None,
+    detections: TextIO | None = None,
 ) -> int:
     """Capture live traffic and send it through the same pipeline as PCAP."""
     packet_id = 0
@@ -229,6 +245,8 @@ def run_interface(
             flows,
             max_decode_size=max_decode_size,
             invalid_policy=invalid_policy,
+            engine=engine,
+            detections=detections,
         )
 
     try:
@@ -262,6 +280,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--udp-timeout", type=float, default=30)
     parser.add_argument("--max-decode-size", type=int, default=65536)
     parser.add_argument("--invalid-policy", choices=("mark", "skip"), default="mark")
+    parser.add_argument("--rules", nargs="+", help="Snort .rules files; enables the Core Engine")
+    parser.add_argument("--rules-config", help="JSON file with disabled_files / disabled_sids")
+    parser.add_argument("--detections-output", default="detections.jsonl", help="Detection Event JSONL output")
     return parser
 
 
@@ -290,10 +311,23 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("input, event output and flow output must be different files")
 
     tracker = new_tracker(args.tcp_timeout, args.udp_timeout)
+    engine = None
+    if args.rules:
+        config = {}
+        if args.rules_config:
+            with open(args.rules_config, encoding="utf-8") as handle:
+                config = json.load(handle)
+        results = load_rule_files(args.rules, config)
+        for item in results:
+            if item["status"] != "valid":
+                print(f"Rule {item['file']}:{item['line']} {item['status']}: {item['reason']}", file=sys.stderr)
+        engine = new_engine(build_repository(results))
     try:
         with open(args.output, "w", encoding="utf-8") as events, open(
             args.flows_output, "w", encoding="utf-8"
-        ) as flows:
+        ) as flows, open(
+            args.detections_output if engine else os.devnull, "w", encoding="utf-8"
+        ) as detections:
             if args.pcap is not None:
                 return run_pcap(
                     args.pcap,
@@ -303,6 +337,8 @@ def main(argv: list[str] | None = None) -> int:
                     count=args.count,
                     max_decode_size=args.max_decode_size,
                     invalid_policy=args.invalid_policy,
+                    engine=engine,
+                    detections=detections,
                 )
             return run_interface(
                 args.interface,
@@ -314,6 +350,8 @@ def main(argv: list[str] | None = None) -> int:
                 packet_filter=args.packet_filter,
                 max_decode_size=args.max_decode_size,
                 invalid_policy=args.invalid_policy,
+                engine=engine,
+                detections=detections,
             )
     except (OSError, ValueError, Scapy_Exception) as error:
         print(f"Processing failed: {error}", file=sys.stderr)
