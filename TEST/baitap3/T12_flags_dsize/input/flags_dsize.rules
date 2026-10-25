@@ -1,0 +1,6 @@
+alert tcp any any -> any any (msg:"1 flags S"; flags:S; sid:1; rev:1;)
+alert tcp any any -> any any (msg:"2 flags SA"; flags:SA; sid:2; rev:1;)
+alert tcp any any -> any any (msg:"3 flags A+"; flags:A+; sid:3; rev:1;)
+alert tcp any any -> any any (msg:"4 dsize >10"; dsize:>10; sid:4; rev:1;)
+alert tcp any any -> any any (msg:"5 dsize 0"; dsize:0; sid:5; rev:1;)
+alert tcp any any -> any any (msg:"6 dsize 5<>20"; dsize:5<>20; sid:6; rev:1;)
