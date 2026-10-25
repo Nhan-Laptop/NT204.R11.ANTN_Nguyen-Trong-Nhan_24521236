@@ -1,0 +1,5 @@
+alert tcp any any -> any 80 (msg:"1 offset 4 depth 3"; content:"GET"; offset:4; depth:3; sid:1; rev:1;)
+alert tcp any any -> any 80 (msg:"2 offset 0 depth 3"; content:"GET"; offset:0; depth:3; sid:2; rev:1;)
+alert tcp any any -> any 80 (msg:"3 offset 5"; content:"GET"; offset:5; sid:3; rev:1;)
+alert tcp any any -> any 80 (msg:"4 depth 7"; content:"GET"; depth:7; sid:4; rev:1;)
+alert tcp any any -> any 80 (msg:"5 depth 6"; content:"GET"; depth:6; sid:5; rev:1;)
