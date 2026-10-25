@@ -25,7 +25,7 @@ chỉ cung cấp chức năng cho app chung và cho unit test.
 Chạy từ root repository:
 
 ```bash
-python main.py --pcap TEST/baitap1/parser/input/pcap/http_get.pcap \
+python main.py --pcap TEST/baitap1/http_get/input/http_get.pcap \
   --output events.jsonl --flows-output flows.jsonl
 ```
 
@@ -34,17 +34,10 @@ không phải parser độc lập.
 
 ## Test và evidence
 
-Test nằm ngoài module tại `TEST/baitap1/parser/`:
+12 test case bắt buộc (mục 9 của đề) nằm ở `TEST/baitap1/`, mỗi test case một folder đúng tên trong đề:
+`tcp_handshake`, `tcp_data`, `udp`, `http_get`, `http_post`, `http_response`, `dns_query`, `dns_response`,
+`smtp_command`, `smtp_response`, `unknown_protocol`, `malformed_packet`.
 
-- `test_mandatory_cases.py`: 12 use case chính.
-- `test_pipeline.py`: TCP, UDP, HTTP, DNS, SMTP và unknown.
-- `test_capture_cli.py`: capture, callback, count và option.
-- `test_jsonl_log.py`: JSONL, thứ tự packet, mark/skip.
-- `test_error_handling.py`: malformed, truncated và capture error.
-- `test_event_schema.py`: schema và JSON compatibility.
-- `test_nonstandard_ports.py`: protocol trên port không chuẩn.
-- `test_unknown_policy.py`: mark/skip unknown.
-
-Kết quả thực tế: **79/79 test PASS**. Input nằm ở
-`TEST/baitap1/parser/input/pcap/`; JSONL evidence và log nằm ở
-`TEST/baitap1/parser/output/`. Báo cáo chi tiết ở `TEST/README.md`.
+Mỗi folder có file test (chạy ra output), `readme.md` đánh giá output kèm ảnh chụp terminal, và `input/`, `output/`.
+Ví dụ chạy: `python3 -m TEST.baitap1.http_get.test_http_get`.
+Các test về CLI, JSONL, schema, lỗi... nằm ở `TEST/baitap1/khac/`. Tổng hợp ở `TEST/README.md`.
