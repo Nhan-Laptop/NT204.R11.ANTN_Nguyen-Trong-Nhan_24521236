@@ -1,0 +1,3 @@
+# Ruff config with default rules (pyflakes + core pycodestyle errors).
+# Run from the repo root: ruff check .
+[tool.ruff]
