@@ -1,0 +1,4 @@
+alert tcp any any -> any 80 (msg:"Rule truoc"; sid:1; rev:1;)
+alert tcp any any -> any 80 (msg:"Thieu dau cham phay"; content:"abc" sid:2; rev:1;)
+alert tcp any any -> any 99999 (msg:"Port sai"; sid:3; rev:1;)
+alert tcp any any -> any 80 (msg:"Rule sau"; sid:4; rev:1;)
