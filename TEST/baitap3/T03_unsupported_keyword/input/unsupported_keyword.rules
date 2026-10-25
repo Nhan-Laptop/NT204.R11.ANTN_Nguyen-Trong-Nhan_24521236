@@ -1,0 +1,4 @@
+alert tcp any any -> any 80 (msg:"Dung pcre"; pcre:"/abc/"; sid:1; rev:1;)
+alert tcp any any -> any 80 (msg:"Dung byte_test"; content:"x"; byte_test:2,>,10,0; sid:2; rev:1;)
+alert icmp any any -> any any (msg:"Giao thuc icmp"; sid:3; rev:1;)
+alert tcp any any -> any 80 (msg:"Rule duoc ho tro"; content:"GET"; sid:4; rev:1;)
